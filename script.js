@@ -1,6 +1,6 @@
-const numBottles = 5;
-const maxLayersPerBottle = 3;
-const layerHeight = 50;
+const numBottles = 9;
+const maxLayersPerBottle = 4;
+const layerHeight = 40;
 document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
 document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
 
@@ -10,17 +10,30 @@ let selectedSourceBottle = null;
 
 const gamesWonSpan = document.getElementById('games-won');
 const gamesPlayedSpan = document.getElementById('games-played');
+const sessionGamesWonSpan = document.getElementById('session-games-won');
+const sessionGamesPlayedSpan = document.getElementById('session-games-played');
+
+
 
 // Get initial values from Local Storage (or set defaults)
 let gamesWon = Number(localStorage.getItem('gamesWon')) || 0;
 let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
+let sessionGamesPlayed = 0;
+let sessionGamesWon = 0;
 
-// Update the displayed values
-gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
-gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
+updateStats()
+
 
 let gameSolved = false
 let confettiInterval
+
+function updateStats() {
+    // Update the displayed values
+    gamesWonSpan.textContent = `${gamesWon}`;
+    gamesPlayedSpan.textContent = `${gamesPlayed}`;
+    sessionGamesWonSpan.textContent = `${sessionGamesWon}`;
+    sessionGamesPlayedSpan.textContent = `${sessionGamesPlayed}`;
+}
 
 function pourLayers(sourceBottle, targetBottle) {
     const sourceLayers = sourceBottle.querySelectorAll('.layer');
@@ -59,7 +72,8 @@ function pourLayers(sourceBottle, targetBottle) {
     if (gameSolved) {
         gamesWon++;
         localStorage.setItem('gamesWon', gamesWon);
-        gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
+        sessionGamesWon++;
+        updateStats()
         fireConfetti()
     }
 
@@ -110,8 +124,9 @@ function generateBottles() {
     bottles.forEach(bottle => bottle.remove());
 
     gamesPlayed++;
+    sessionGamesPlayed++;
     localStorage.setItem('gamesPlayed', gamesPlayed);
-    gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
+    updateStats()
 
     gameSolved = false
     clearInterval(confettiInterval)
@@ -219,16 +234,6 @@ generateBottles();
 
 
 const restartButton = document.getElementById('restart-button');
-
-function resetBottles() {
-    // Remove all layers from bottles
-    const layers = document.querySelectorAll('.layer');
-    layers.forEach(layer => layer.remove());
-    generateBottles()
-
-    // Reset other game variables (e.g., layer distribution, target colors)
-}
-
 
 restartButton.addEventListener('click', () => {
     // Restart the game logic here
