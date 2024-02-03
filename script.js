@@ -1,4 +1,5 @@
 let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
+let numEmpty = parseInt(document.getElementById('num-empty').value);
 let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
 let maxColors = parseInt(document.getElementById('num-colors').value);
 const layerHeight = 40;
@@ -133,6 +134,7 @@ function generateBottles() {
     clearInterval(confettiInterval)
 
     numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
+    numEmpty = parseInt(document.getElementById('num-empty').value);
     maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
     maxColors = parseInt(document.getElementById('num-colors').value);
 
@@ -172,10 +174,12 @@ function distributeLayers(unassignedLayers, bottleContainer) {
         bottleContainer.appendChild(bottle);
     }
 
-    //Create an empty bottle to play
-    const bottle = document.createElement('div');
-    bottle.classList.add('bottle');
-    bottleContainer.appendChild(bottle);
+    //Create empty bottles
+    for (let i = 0; i < numEmpty; i++) {
+        const bottle = document.createElement('div');
+        bottle.classList.add('bottle');
+        bottleContainer.appendChild(bottle);
+    }
 
     // Add event listeners for clicking on bottles
     let bottles = document.querySelectorAll('.bottle');
