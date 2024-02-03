@@ -19,6 +19,8 @@ let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
 gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
 gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
 
+let gameSolved = false
+let confettiInterval
 
 function pourLayers(sourceBottle, targetBottle) {
     const sourceLayers = sourceBottle.querySelectorAll('.layer');
@@ -53,7 +55,8 @@ function pourLayers(sourceBottle, targetBottle) {
         targetBottle.appendChild(layer);
     }
 
-    if (checkGameSolved()) {
+    gameSolved = checkGameSolved()
+    if (gameSolved) {
         gamesWon++;
         localStorage.setItem('gamesWon', gamesWon);
         gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
@@ -72,11 +75,11 @@ function fireConfetti() {
         return Math.random() * (max - min) + min;
     }
 
-    const interval = setInterval(function () {
+    confettiInterval = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
 
         if (timeLeft <= 0) {
-            return clearInterval(interval);
+            return clearInterval(confettiInterval);
         }
 
         const particleCount = 50 * (timeLeft / duration);
@@ -109,6 +112,9 @@ function generateBottles() {
     gamesPlayed++;
     localStorage.setItem('gamesPlayed', gamesPlayed);
     gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
+
+    gameSolved = false
+    clearInterval(confettiInterval)
 
     const unassignedLayers = [];
 
@@ -151,31 +157,32 @@ function distributeLayers(unassignedLayers, bottleContainer) {
     // Add event listeners for clicking on bottles
     let bottles = document.querySelectorAll('.bottle');
     bottles.forEach(bottle => {
-        bottle.addEventListener('click', () => {
-            if (bottle.classList.contains('selected')) {
-                // Same bottle clicked, do nothing and return
-                bottle.classList.remove('selected');
-                selectedSourceBottle = null;
-                return;
-            }
-
-            if (selectedSourceBottle === null) {
-                // First click selects the source bottle
-                selectedSourceBottle = bottle;
-                // Visually indicate the selected source bottle (optional)
-                selectedSourceBottle.classList.add('selected');
-            } else {
-                // Second click selects the target bottle and performs the pour
-                pourLayers(selectedSourceBottle, bottle);
-                selectedSourceBottle = null;
-                // Remove visual indication of selected source bottle (optional)
-                bottles.forEach(b => b.classList.remove('selected'));
-            }
-
-
-        });
+        bottle.addEventListener('click', () => handleBottleClick(bottle));
     });
 
+}
+
+function handleBottleClick(bottle) {
+    if (!gameSolved) {
+        if (bottle.classList.contains('selected')) {
+            // Same bottle clicked, do nothing and return
+            bottle.classList.remove('selected');
+            selectedSourceBottle = null;
+            return;
+        }
+
+        if (selectedSourceBottle === null) {
+            // First click selects the source bottle
+            selectedSourceBottle = bottle;
+            // Visually indicate the selected source bottle (optional)
+            selectedSourceBottle.classList.add('selected');
+        } else {
+            // Second click selects the target bottle and performs the pour
+            pourLayers(selectedSourceBottle, bottle);
+            selectedSourceBottle.classList.remove('selected')
+            selectedSourceBottle = null;
+        }
+    }
 }
 
 function checkGameSolved() {
