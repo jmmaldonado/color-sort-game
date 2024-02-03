@@ -6,63 +6,76 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-  }
-  
-  .game-container {
+}
+
+.game-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .bottle-container {
+}
+
+.bottle-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  .bottle {
+}
+
+.bottle {
     width: 100px;
-    height: 250px;
+    height: calc(var(--layer-height) * var(--max-layers-per-bottle));
     border: 2px solid black;
     border-radius: 5px;
-    position: relative; /* For absolute positioning of layers */
+    position: relative;
+    /* For absolute positioning of layers */
     display: flex;
     flex-direction: column;
     width: 100px;
-  }
-  
-  .bottle.empty {
-    background-color: #f5f5f5; /* Lighter background for empty bottle */
-  }
-  
-  .layer {
+}
+
+.bottle.empty {
+    background-color: #f5f5f5;
+    /* Lighter background for empty bottle */
+}
+
+.layer {
     display: flex;
     flex-grow: 1;
 
     flex-direction: column;
-    justify-content: flex-end; /* Stack layers at the bottom */
-    width: 100%;
-    height: 40%;
+    justify-content: flex-end; 
+    width: 99%;
+  height: var(--layer-height);
+    border: 1px solid gray;
   }
-  
-  
-  /* Example color styling for layers */
-  .blue {
+
+
+
+/* Example color styling for layers */
+.blue {
     background-color: blue;
-  }
-  
-  .red {
+}
+
+.red {
     background-color: red;
-  }
-  
-  .yellow {
+}
+
+.yellow {
     background-color: yellow;
-  }
-  
-  /* Placeholder for controls styling */
-  .controls {
+}
+
+/* Placeholder for controls styling */
+.controls {
     margin-top: 20px;
     text-align: center;
-  }
-  
+}
+
+.bottle.selected {
+    /* Styles for general selection highlight */
+    border: 4px solid black;
+}
+
+.bottle.source-selected {
+    /* Styles to differentiate source bottle (e.g., thicker border) */
+    border: 4px solid black;
+}
