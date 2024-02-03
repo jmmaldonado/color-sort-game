@@ -8,7 +8,7 @@ const layerHeight = 40;
 
 const colors = ['blue', 'red', 'yellow', 'purple', 'green', 'gray'];
 let selectedSourceBottle = null;
-
+let previousState = []
 
 const gamesWonSpan = document.getElementById('games-won');
 const gamesPlayedSpan = document.getElementById('games-played');
@@ -63,6 +63,9 @@ function pourLayers(sourceBottle, targetBottle) {
         targetLayers[targetLayers.length - 1].style.backgroundColor !== currentColor) {
         return; // Colors don't match
     }
+
+    //Save the current state in case we need to go back
+    previousState.push(document.querySelector('.bottle-container').cloneNode(true));
 
     // Pour the layers!
     for (const layer of contiguousLayers) {
@@ -181,12 +184,16 @@ function distributeLayers(unassignedLayers, bottleContainer) {
         bottleContainer.appendChild(bottle);
     }
 
+    assignBottlesClickHandler()
+
+}
+
+function assignBottlesClickHandler() {
     // Add event listeners for clicking on bottles
     let bottles = document.querySelectorAll('.bottle');
     bottles.forEach(bottle => {
         bottle.addEventListener('click', () => handleBottleClick(bottle));
     });
-
 }
 
 function handleBottleClick(bottle) {
@@ -209,6 +216,18 @@ function handleBottleClick(bottle) {
             selectedSourceBottle.classList.remove('selected')
             selectedSourceBottle = null;
         }
+    }
+}
+
+function handleUndoClick() {
+    if (previousState.length > 0) {
+        const savedState = previousState.pop()
+        document.querySelector('.bottle-container').innerHTML = savedState.innerHTML
+        selectedSourceBottle = null;
+        for (const bottle of document.querySelectorAll('.bottle')) {
+            bottle.classList.remove('selected')
+        }
+        assignBottlesClickHandler()
     }
 }
 
@@ -253,3 +272,7 @@ restartButton.addEventListener('click', () => {
     selectedSourceBottle = null; // Clear selection
     // Any other necessary reset actions
 });
+
+const undoButton = document.getElementById('undo-button');
+
+undoButton.addEventListener('click', handleUndoClick);
