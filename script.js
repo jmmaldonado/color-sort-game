@@ -1,11 +1,11 @@
-let numBottles = parseInt(document.getElementById('num-bottles').value) || 9;
-let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value) || 4;
+let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
+let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
+let maxColors = parseInt(document.getElementById('num-colors').value);
 const layerHeight = 40;
-document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
-document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
 
 
-const colors = ['blue', 'red', 'yellow'];
+
+const colors = ['blue', 'red', 'yellow', 'purple', 'green', 'gray'];
 let selectedSourceBottle = null;
 
 
@@ -132,14 +132,18 @@ function generateBottles() {
     gameSolved = false
     clearInterval(confettiInterval)
 
-    numBottles = parseInt(document.getElementById('num-bottles').value) || 9;
-    maxLayersPerBottle = parseInt(document.getElementById('num-layers').value) || 4;
+    numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
+    maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
+    maxColors = parseInt(document.getElementById('num-colors').value);
+
+    document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
+    document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
 
     const unassignedLayers = [];
 
     // Nested loops for bottles and colors
     for (let i = 0; i < numBottles; i++) {
-        const color = colors[i % colors.length];
+        const color = colors[i % maxColors];
         for (let j = 0; j < maxLayersPerBottle; j++) {
             const layer = document.createElement('div');
             layer.classList.add('layer');
