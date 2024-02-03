@@ -1,8 +1,9 @@
-const numBottles = 9;
-const maxLayersPerBottle = 4;
+let numBottles = parseInt(document.getElementById('num-bottles').value) || 9;
+let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value) || 4;
 const layerHeight = 40;
 document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
 document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
+
 
 const colors = ['blue', 'red', 'yellow'];
 let selectedSourceBottle = null;
@@ -130,6 +131,9 @@ function generateBottles() {
 
     gameSolved = false
     clearInterval(confettiInterval)
+
+    numBottles = parseInt(document.getElementById('num-bottles').value) || 9;
+    maxLayersPerBottle = parseInt(document.getElementById('num-layers').value) || 4;
 
     const unassignedLayers = [];
 
