@@ -10,23 +10,37 @@
 </head>
 
 <body>
-    <div class="controls">
+
+    <div>
         <div class="controls">
-            <span id="games-won">Games Won: 0</span>
-            <span id="games-played">Games Played: 0</span>
+            <table>
+                <th></th>
+                <th>Played</th>
+                <th>Won</th>
+                <tr>
+                    <td>Session</td>
+                    <td><div id="session-games-played" class="session-games-played">Games Played This Session: 0</div></td>
+                    <td><div id="session-games-won" class="session-games-won">Games Won This Session: 0</div></td>
+                </tr>
+                <tr>
+                    <td>Lifetime</td>
+                    <td><span id="games-played">Games Played: 0</span></td>
+                    <td><span id="games-won">Games Won: 0</span></td>
+                </tr>
+            </table>
             <button id="restart-button">Restart</button>
-          </div>
-          
-      
-    <div class="game-container">
-        <div class="bottle-container">
         </div>
 
-        <div class="controls">
-        </div>
-    </div>
 
-    <script src="script.js" defer></script>
+        <div class="game-container">
+            <div class="bottle-container">
+            </div>
+
+            <div class="controls">
+            </div>
+        </div>
+
+        <script src="script.js" defer></script>
 </body>
 
 </html>
