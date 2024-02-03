@@ -10,7 +10,6 @@ body {
 
 .game-container {
     background-color: #fff;
-    padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -18,13 +17,16 @@ body {
 .bottle-container {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 40px;
+    gap: 30px;
     /* Evenly distribute space around bottles */
 
 }
 
 .bottle {
-    width: 100px;
+    width: 50px;
     height: calc(var(--layer-height) * var(--max-layers-per-bottle));
     border: 2px solid black;
     border-radius: 5px;
@@ -32,8 +34,6 @@ body {
     /* For absolute positioning of layers */
     display: flex;
     flex-direction: column-reverse;
-    width: 100px;
-    margin: 10px;
 }
 
 .bottle.empty {
@@ -44,6 +44,7 @@ body {
 .bottle.selected {
     /* ... existing styles */
     transform: translateY(-20px);
+    border: 4px solid green;
     /* Move up on selection */
     transition: transform 0.1s ease-in-out;
     /* Add transition for smoothness */
@@ -82,8 +83,12 @@ body {
 
 /* Placeholder for controls styling */
 .controls {
+    display: flex;
+    flex-direction: row;
     margin-top: 20px;
     text-align: center;
+    justify-content: space-evenly;
+    padding: 20px;
 }
 
 
