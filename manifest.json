@@ -1,0 +1,16 @@
+{
+    "name": "Water Bottle Sort",
+    "short_name": "Bottle Sort",
+    "icons": [
+      {
+        "src": "https://cdn-icons-png.flaticon.com/512/7181/7181429.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000"
+  }
+  
