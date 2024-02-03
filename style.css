@@ -20,7 +20,7 @@ body {
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 40px;
-    gap: 30px;
+    gap: 10px;
     /* Evenly distribute space around bottles */
 
 }
@@ -95,4 +95,12 @@ body {
 .bottle.source-selected {
     /* Styles to differentiate source bottle (e.g., thicker border) */
     border: 4px solid black;
+}
+
+select {
+    width: 40px;
+}
+
+.difficulty-selector {
+    text-align: right;
 }
