@@ -8,6 +8,16 @@ const colors = ['blue', 'red', 'yellow'];
 let selectedSourceBottle = null;
 
 
+const gamesWonSpan = document.getElementById('games-won');
+const gamesPlayedSpan = document.getElementById('games-played');
+
+// Get initial values from Local Storage (or set defaults)
+let gamesWon = Number(localStorage.getItem('gamesWon')) || 0;
+let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
+
+// Update the displayed values
+gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
+gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
 
 
 function pourLayers(sourceBottle, targetBottle) {
@@ -15,9 +25,9 @@ function pourLayers(sourceBottle, targetBottle) {
     const targetLayers = targetBottle.querySelectorAll('.layer');
 
     // Get contiguous layers of the same color from the top of the source bottle
-    const contiguousLayers = [];
-    let currentColor = sourceLayers[0].style.backgroundColor;
-    for (let i = 0; i < sourceLayers.length; i++) {
+    let contiguousLayers = [];
+    let currentColor = sourceLayers[sourceLayers.length - 1].style.backgroundColor;
+    for (let i = sourceLayers.length - 1; i >= 0; i--) {
         const layer = sourceLayers[i];
         if (layer.style.backgroundColor === currentColor) {
             contiguousLayers.push(layer);
@@ -33,17 +43,20 @@ function pourLayers(sourceBottle, targetBottle) {
 
     // Check if the topmost layer in the target bottle has the same color
     if (targetLayers.length > 0 &&
-        targetLayers[0].style.backgroundColor !== currentColor) {
+        targetLayers[targetLayers.length - 1].style.backgroundColor !== currentColor) {
         return; // Colors don't match
     }
 
     // Pour the layers!
     for (const layer of contiguousLayers) {
         sourceBottle.removeChild(layer);
-        targetBottle.prepend(layer);
+        targetBottle.appendChild(layer);
     }
 
     if (checkGameSolved()) {
+        gamesWon++;
+        localStorage.setItem('gamesWon', gamesWon);
+        gamesWonSpan.textContent = `Games Won: ${gamesWon}`;
         fireConfetti()
     }
 
@@ -88,6 +101,15 @@ function fireConfetti() {
 
 function generateBottles() {
     const bottleContainer = document.querySelector('.bottle-container');
+
+    //Remove any existing bottles
+    let bottles = document.querySelectorAll('.bottle');
+    bottles.forEach(bottle => bottle.remove());
+
+    gamesPlayed++;
+    localStorage.setItem('gamesPlayed', gamesPlayed);
+    gamesPlayedSpan.textContent = `Games Played: ${gamesPlayed}`;
+
     const unassignedLayers = [];
 
     // Nested loops for bottles and colors
@@ -97,6 +119,7 @@ function generateBottles() {
             const layer = document.createElement('div');
             layer.classList.add('layer');
             layer.style.backgroundColor = color;
+            layer.style.height = `${layerHeight}px`; // Set fixed height
             unassignedLayers.push(layer);
         }
     }
@@ -112,9 +135,10 @@ function distributeLayers(unassignedLayers, bottleContainer) {
 
         for (let j = 0; j < maxLayersPerBottle; j++) {
             const randomIndex = Math.floor(Math.random() * unassignedLayers.length);
-            bottle.appendChild(unassignedLayers[randomIndex]);
+            bottle.prepend(unassignedLayers[randomIndex]);
             unassignedLayers.splice(randomIndex, 1);
         }
+
 
         bottleContainer.appendChild(bottle);
     }
@@ -123,6 +147,34 @@ function distributeLayers(unassignedLayers, bottleContainer) {
     const bottle = document.createElement('div');
     bottle.classList.add('bottle');
     bottleContainer.appendChild(bottle);
+
+    // Add event listeners for clicking on bottles
+    let bottles = document.querySelectorAll('.bottle');
+    bottles.forEach(bottle => {
+        bottle.addEventListener('click', () => {
+            if (bottle.classList.contains('selected')) {
+                // Same bottle clicked, do nothing and return
+                bottle.classList.remove('selected');
+                selectedSourceBottle = null;
+                return;
+            }
+
+            if (selectedSourceBottle === null) {
+                // First click selects the source bottle
+                selectedSourceBottle = bottle;
+                // Visually indicate the selected source bottle (optional)
+                selectedSourceBottle.classList.add('selected');
+            } else {
+                // Second click selects the target bottle and performs the pour
+                pourLayers(selectedSourceBottle, bottle);
+                selectedSourceBottle = null;
+                // Remove visual indication of selected source bottle (optional)
+                bottles.forEach(b => b.classList.remove('selected'));
+            }
+
+
+        });
+    });
 
 }
 
@@ -157,23 +209,23 @@ function checkGameSolved() {
 
 generateBottles();
 
-// Add event listeners for clicking on bottles
-const bottles = document.querySelectorAll('.bottle');
-bottles.forEach(bottle => {
-    bottle.addEventListener('click', () => {
-        if (selectedSourceBottle === null) {
-            // First click selects the source bottle
-            selectedSourceBottle = bottle;
-            // Visually indicate the selected source bottle (optional)
-            selectedSourceBottle.classList.add('selected');
-        } else {
-            // Second click selects the target bottle and performs the pour
-            pourLayers(selectedSourceBottle, bottle);
-            selectedSourceBottle = null;
-            // Remove visual indication of selected source bottle (optional)
-            bottles.forEach(b => b.classList.remove('selected'));
-        }
 
 
-    });
+const restartButton = document.getElementById('restart-button');
+
+function resetBottles() {
+    // Remove all layers from bottles
+    const layers = document.querySelectorAll('.layer');
+    layers.forEach(layer => layer.remove());
+    generateBottles()
+
+    // Reset other game variables (e.g., layer distribution, target colors)
+}
+
+
+restartButton.addEventListener('click', () => {
+    // Restart the game logic here
+    generateBottles(); // Function to clear existing layers and reset bottle states
+    selectedSourceBottle = null; // Clear selection
+    // Any other necessary reset actions
 });

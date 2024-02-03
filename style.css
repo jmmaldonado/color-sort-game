@@ -17,8 +17,9 @@ body {
 
 .bottle-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-evenly; /* Evenly distribute space around bottles */
+
 }
 
 .bottle {
@@ -29,8 +30,9 @@ body {
     position: relative;
     /* For absolute positioning of layers */
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     width: 100px;
+    margin: 10px;
 }
 
 .bottle.empty {
@@ -38,17 +40,16 @@ body {
     /* Lighter background for empty bottle */
 }
 
-.layer {
+  .layer {
     display: flex;
-    flex-grow: 1;
-
+    flex-grow: 0; /* Keep layers from expanding */
     flex-direction: column;
-    justify-content: flex-end; 
-    width: 99%;
-  height: var(--layer-height);
-    border: 1px solid gray;
+    /* Position layers at the bottom */
+    justify-content: flex-start; 
+    width: 100%;
+    /* Use a fixed height for all layers */
+    height: var(--layer-height);
   }
-
 
 
 /* Example color styling for layers */
