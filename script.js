@@ -1,6 +1,14 @@
 // Select game elements
 const bottles = document.querySelectorAll('.bottle');
 const emptyBottle = document.getElementById('empty-bottle');
+const numBottles = Math.floor(Math.random() * 5) + 1; // Random number between 1 and 5
+const maxLayersPerBottle = 3; // Adjust as needed
+const colors = ['blue', 'red', 'yellow', 'green', 'purple'];
+totalLayers = numBottles * maxLayersPerBottle; // Total layers based on max layers per bottle
+
+
+const minLayersPerColor = Math.ceil(totalLayers / colors.length);
+
 
 // Function to check if pouring is possible
 function canPour(sourceBottle, targetBottle) {
@@ -57,21 +65,31 @@ function generateBottles(numBottles) {
         const bottle = document.createElement('div');
         bottle.classList.add('bottle');
         // Add layers with random colors (explained later)
-        generateRandomLayers(bottle)
+        generateRandomLayers(bottle, minLayersPerColor)
         bottleContainer.appendChild(bottle);
     }
 }
 
-function generateRandomLayers(bottle) {
-    const numLayers = Math.floor(Math.random() * 3) + 1; // Random number between 1 and 3
+function generateRandomLayers(bottle, minLayersPerColor) {
+    let currentColor = getRandomColor(); // Initialize with a random color
+    let remainingLayers = minLayersPerColor * numBottles; // Total layers needed for this color
+    const numLayers = minLayersPerColor;
     for (let i = 0; i < numLayers; i++) {
-        const layer = document.createElement('div');
-        layer.classList.add('layer');
-        // Set random color for the layer
-        layer.style.backgroundColor = getRandomColor(); // Function to get random color
-        bottle.appendChild(layer);
+      const layer = document.createElement('div');
+      layer.classList.add('layer');
+  
+      // Ensure enough layers of the current color before moving to the next
+      while (colors.indexOf(currentColor) === -1 || remainingLayers <= 0) {
+        currentColor = getRandomColor(); // Switch to a new random color
+      }
+  
+      layer.style.backgroundColor = currentColor;
+      bottle.appendChild(layer);
+      remainingLayers--; // Count down remaining layers needed for this color
     }
-}
+  }
+  
+  
 
 function getRandomColor() {
     const colors = ['blue', 'red', 'yellow', 'green', 'purple'];
@@ -79,7 +97,6 @@ function getRandomColor() {
 }
 
 
-// Specify desired number of bottles
-const numBottles = Math.floor(Math.random() * 5) + 1; // Random number between 1 and 5
+
 generateBottles(numBottles);
 
