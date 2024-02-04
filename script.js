@@ -1,4 +1,4 @@
-const latestVersion = "1.2.8 - Save game settings";
+const latestVersion = "1.2.9 - Pastel colors";
 
 // Retrieve saved settings or set defaults
 let savedSettings;
@@ -32,7 +32,7 @@ function saveSettings() {
 
 
 
-const colors = ['blue', 'red', 'yellow', 'purple', 'green', 'gray'];
+const colors = ['color1', 'color2', 'color3', 'color4', 'color5', 'color6'];
 let selectedSourceBottle = null;
 let previousState = []
 
@@ -92,10 +92,11 @@ function pourLayers(sourceBottle, targetBottle) {
 
     // Get contiguous layers of the same color from the top of the source bottle
     let contiguousLayers = [];
-    let currentColor = sourceLayers[sourceLayers.length - 1].style.backgroundColor;
+    let currentColor = sourceLayers[sourceLayers.length - 1].style.bottleLayerColor;
+    console.log("Pour currentColor:", currentColor)
     for (let i = sourceLayers.length - 1; i >= 0; i--) {
         const layer = sourceLayers[i];
-        if (layer.style.backgroundColor === currentColor) {
+        if (layer.style.bottleLayerColor === currentColor) {
             contiguousLayers.push(layer);
         } else {
             break;
@@ -109,7 +110,7 @@ function pourLayers(sourceBottle, targetBottle) {
 
     // Check if the topmost layer in the target bottle has the same color
     if (targetLayers.length > 0 &&
-        targetLayers[targetLayers.length - 1].style.backgroundColor !== currentColor) {
+        targetLayers[targetLayers.length - 1].style.bottleLayerColor !== currentColor) {
         return; // Colors don't match
     }
 
@@ -262,7 +263,7 @@ function generateBottles() {
             const layer = document.createElement('div');
             layer.classList.add('layer');
             layer.classList.add(color)
-            layer.style.backgroundColor = color;
+            layer.style.bottleLayerColor = color;
             layer.style.height = `${layerHeight}px`; // Set fixed height
             unassignedLayers.push(layer);
         }
@@ -351,16 +352,16 @@ function checkGameSolved() {
         }
 
         // Check if the bottle has the maximum number of layers
-        if (bottle.querySelectorAll('.layer').length !== maxLayersPerBottle) {
+        if (bottle.querySelectorAll('.layer').length !== settings.maxLayersPerBottle) {
             return false; // Not solved, wrong number of layers
         }
 
         // Get the color of the first layer in this bottle
-        const referenceColor = bottle.querySelector('.layer').style.backgroundColor;
+        const referenceColor = bottle.querySelector('.layer').style.bottleLayerColor;
 
         // Check if all other layers in the bottle have the same color
         for (const layer of bottle.querySelectorAll('.layer')) {
-            if (layer.style.backgroundColor !== referenceColor) {
+            if (layer.style.bottleLayerColor !== referenceColor) {
                 return false; // Not solved, colors don't match
             }
         }

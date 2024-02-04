@@ -67,29 +67,29 @@ body {
     height: var(--layer-height);
 }
 
-.blue {
-    background: linear-gradient(to right, rgba(255,255,255,0.8) -10%, blue 50%, rgba(255,255,255,0.8) 110%);
+.color1 {
+    background: linear-gradient(to right, rgba(255,255,255,0.4) -20%, #FFBC42 50%, rgba(255,255,255,0.4) 120%);
     filter: brightness(1.1) contrast(1.05);
 }
 
-.red {
-    background: linear-gradient(to right, rgba(255,255,255,0.8) -10%, red 50%, rgba(255,255,255,0.8) 110%);
+.color2 {
+    background: linear-gradient(to right, rgba(255,255,255,0.4) -20%, #D81159 50%, rgba(255,255,255,0.4) 120%);
     filter: brightness(1.1) contrast(1.05);
 
 }
 
-.yellow {
-    background: linear-gradient(to right, rgba(255,255,255,0.8) -10%, yellow 50%, rgba(255,255,255,0.8) 110%);
+.color3 {
+    background: linear-gradient(to right, rgba(255,255,255,0.4) -20%, #218380 50%, rgba(255,255,255,0.4) 120%);
     filter: brightness(1.1) contrast(1.05);
 }
 
-.purple {
-    background: linear-gradient(to right, rgba(255,255,255,0.8) -10%, purple 50%, rgba(255,255,255,0.8) 110%);
+.color4 {
+    background: linear-gradient(to right, rgba(255,255,255,0.4) -20%, #73D2DE 50%, rgba(255,255,255,0.4) 120%);
     filter: brightness(1.1) contrast(1.05);
 }
 
-.green {
-    background: linear-gradient(to right, rgba(255,255,255,0.8) -10%, green 50%, rgba(255,255,255,0.8) 110%);
+.color5 {
+    background: linear-gradient(to right, rgba(255,255,255,0.4) -20%, #8F2D56 50%, rgba(255,255,255,0.4) 120%);
     filter: brightness(1.1) contrast(1.05);
 }
 
