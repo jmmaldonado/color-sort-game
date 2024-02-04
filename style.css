@@ -67,18 +67,30 @@ body {
     height: var(--layer-height);
 }
 
-
-/* Example color styling for layers */
 .blue {
-    background-color: blue;
+    background: linear-gradient(to right, #444 0%, blue 30%, #ddd 120%);
+    filter: brightness(1.1) contrast(1.05);
 }
 
 .red {
-    background-color: red;
+    background: linear-gradient(to right, #444 0%, red 30%, #ddd 120%);
+    filter: brightness(1.1) contrast(1.05);
+
 }
 
 .yellow {
-    background-color: yellow;
+    background: linear-gradient(to right, #444 0%, yellow 30%, #ddd 120%);
+    filter: brightness(1.1) contrast(1.05);
+}
+
+.purple {
+    background: linear-gradient(to right, #444 0%, purple 30%, #ddd 120%);
+    filter: brightness(1.1) contrast(1.05);
+}
+
+.green {
+    background: linear-gradient(to right, #444 0%, green 30%, #ddd 120%);
+    filter: brightness(1.1) contrast(1.05);
 }
 
 /* Placeholder for controls styling */
@@ -112,18 +124,22 @@ select {
     justify-content: space-between;
     align-items: center;
     padding-top: 10px;
-  }
-  
-  .time-and-movements {
-    flex: 1 1 auto; /* Expand the best-times container to fill remaining space */
-    display: flex;
-    flex-direction: column; /* Stack the counters vertically */
-    align-items: start;
-  }
+}
 
-  .best-times {
-    flex: 1 1 auto; /* Expand the best-times container to fill remaining space */
+.time-and-movements {
+    flex: 1 1 auto;
+    /* Expand the best-times container to fill remaining space */
     display: flex;
-    flex-direction: column; /* Stack the counters vertically */
+    flex-direction: column;
+    /* Stack the counters vertically */
+    align-items: start;
+}
+
+.best-times {
+    flex: 1 1 auto;
+    /* Expand the best-times container to fill remaining space */
+    display: flex;
+    flex-direction: column;
+    /* Stack the counters vertically */
     align-items: end;
-  }
+}

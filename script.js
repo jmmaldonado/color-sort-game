@@ -1,4 +1,4 @@
-const latestVersion = "1.2.6 - Add current movement counter";
+const latestVersion = "1.2.7 - Gradient colors";
 
 let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
 let numEmpty = parseInt(document.getElementById('num-empty').value);
@@ -103,20 +103,27 @@ function pourLayers(sourceBottle, targetBottle) {
 
     gameSolved = checkGameSolved()
     if (gameSolved) {
-        gamesWon++;
-        localStorage.setItem('gamesWon', gamesWon);
-        sessionGamesWon++;
-
-        //How long did the game take
-        const endTime = Date.now();
-        const timeTaken = (endTime - startTime) / 1000; // Convert to seconds
-        handleBestTime(timeTaken);
-
-        updateStats()
-        fireConfetti()
+        handleGameSolved()
     }
 
 
+}
+
+function handleGameSolved() {
+    gamesWon++;
+    localStorage.setItem('gamesWon', gamesWon);
+    sessionGamesWon++;
+
+    //Reset current game movements
+    currentMovements = 0;
+
+    //How long did the game take
+    const endTime = Date.now();
+    const timeTaken = (endTime - startTime) / 1000; // Convert to seconds
+    handleBestTime(timeTaken);
+
+    updateStats()
+    fireConfetti()
 }
 
 function increaseMovementCounter() {
@@ -233,6 +240,7 @@ function generateBottles() {
         for (let j = 0; j < maxLayersPerBottle; j++) {
             const layer = document.createElement('div');
             layer.classList.add('layer');
+            layer.classList.add(color)
             layer.style.backgroundColor = color;
             layer.style.height = `${layerHeight}px`; // Set fixed height
             unassignedLayers.push(layer);
