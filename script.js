@@ -1,10 +1,34 @@
-const latestVersion = "1.2.7 - Gradient colors";
+const latestVersion = "1.2.8 - Save game settings";
 
-let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
-let numEmpty = parseInt(document.getElementById('num-empty').value);
-let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
-let maxColors = parseInt(document.getElementById('num-colors').value);
+// Retrieve saved settings or set defaults
+let savedSettings;
+let settings;
+
 const layerHeight = 40;
+
+function loadSettings() {
+    savedSettings = localStorage.getItem('gameSettings');
+    settings = savedSettings ? JSON.parse(savedSettings) : {
+        numBottles: 6, // Default number of bottles
+        numEmpty: 1,    // Default number of empty bottles
+        maxLayersPerBottle: 3, // Default maximum layers per bottle
+        maxColors: 5   // Default maximum colors
+    };
+
+    document.getElementById('num-bottles').value = settings.numBottles;
+    document.getElementById('num-empty').value = settings.numEmpty;
+    document.getElementById('num-layers').value = settings.maxLayersPerBottle;
+    document.getElementById('num-colors').value = settings.maxColors;
+}
+
+function saveSettings() {
+    settings.numBottles = parseInt(document.getElementById('num-bottles').value);
+    settings.numEmpty = parseInt(document.getElementById('num-empty').value);
+    settings.maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
+    settings.maxColors = parseInt(document.getElementById('num-colors').value);
+
+    localStorage.setItem('gameSettings', JSON.stringify(settings));
+}
 
 
 
@@ -79,7 +103,7 @@ function pourLayers(sourceBottle, targetBottle) {
     }
 
     // Check if all contiguous layers can fit in the target bottle
-    if (contiguousLayers.length > maxLayersPerBottle - targetLayers.length) {
+    if (contiguousLayers.length > settings.maxLayersPerBottle - targetLayers.length) {
         return; // Cannot pour all layers
     }
 
@@ -207,6 +231,8 @@ function fireConfetti() {
 
 
 function generateBottles() {
+    saveSettings()
+
     const bottleContainer = document.querySelector('.bottle-container');
 
     //Remove any existing bottles
@@ -221,12 +247,7 @@ function generateBottles() {
     gameSolved = false
     clearInterval(confettiInterval)
 
-    numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
-    numEmpty = parseInt(document.getElementById('num-empty').value);
-    maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
-    maxColors = parseInt(document.getElementById('num-colors').value);
-
-    document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
+    document.documentElement.style.setProperty('--max-layers-per-bottle', settings.maxLayersPerBottle);
     document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
 
     startTime = Date.now();
@@ -235,9 +256,9 @@ function generateBottles() {
     const unassignedLayers = [];
 
     // Nested loops for bottles and colors
-    for (let i = 0; i < numBottles; i++) {
-        const color = colors[i % maxColors];
-        for (let j = 0; j < maxLayersPerBottle; j++) {
+    for (let i = 0; i < settings.numBottles; i++) {
+        const color = colors[i % settings.maxColors];
+        for (let j = 0; j < settings.maxLayersPerBottle; j++) {
             const layer = document.createElement('div');
             layer.classList.add('layer');
             layer.classList.add(color)
@@ -252,11 +273,11 @@ function generateBottles() {
 }
 
 function distributeLayers(unassignedLayers, bottleContainer) {
-    for (let i = 0; i < numBottles; i++) {
+    for (let i = 0; i < settings.numBottles; i++) {
         const bottle = document.createElement('div');
         bottle.classList.add('bottle');
 
-        for (let j = 0; j < maxLayersPerBottle; j++) {
+        for (let j = 0; j < settings.maxLayersPerBottle; j++) {
             const randomIndex = Math.floor(Math.random() * unassignedLayers.length);
             bottle.prepend(unassignedLayers[randomIndex]);
             unassignedLayers.splice(randomIndex, 1);
@@ -267,7 +288,7 @@ function distributeLayers(unassignedLayers, bottleContainer) {
     }
 
     //Create empty bottles
-    for (let i = 0; i < numEmpty; i++) {
+    for (let i = 0; i < settings.numEmpty; i++) {
         const bottle = document.createElement('div');
         bottle.classList.add('bottle');
         bottleContainer.appendChild(bottle);
@@ -349,6 +370,7 @@ function checkGameSolved() {
     return true;
 }
 
+loadSettings();
 updateStats();
 if (!updateAvailable()) {
     generateBottles();
