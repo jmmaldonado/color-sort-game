@@ -22,12 +22,35 @@ let gamesWon = Number(localStorage.getItem('gamesWon')) || 0;
 let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
 let sessionGamesPlayed = 0;
 let sessionGamesWon = 0;
+let sessionBestTime = parseFloat(localStorage.getItem("lifetimeBestTime")) || null;
 
 updateStats()
 
 
 let gameSolved = false
 let confettiInterval
+let timerRef;
+let startTime;
+
+function startTimer() {
+    timerRef = setInterval(() => {
+        // Calculate elapsed time in seconds
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        updateTimerDisplay(elapsedTime);
+    }, 100); // Update every 10 milliseconds
+}
+
+function updateTimerDisplay(elapsedTime) {
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    document.querySelector('.timer-display').textContent = formattedTime;
+}
+
+function stopTimer() {
+    clearInterval(timerRef);
+    timerRef = null;
+}
 
 function updateStats() {
     // Update the displayed values
@@ -35,6 +58,7 @@ function updateStats() {
     gamesPlayedSpan.textContent = `${gamesPlayed}`;
     sessionGamesWonSpan.textContent = `${sessionGamesWon}`;
     sessionGamesPlayedSpan.textContent = `${sessionGamesPlayed}`;
+    updateLifetimeBestTimeDisplay(sessionBestTime)
 }
 
 function pourLayers(sourceBottle, targetBottle) {
@@ -78,11 +102,56 @@ function pourLayers(sourceBottle, targetBottle) {
         gamesWon++;
         localStorage.setItem('gamesWon', gamesWon);
         sessionGamesWon++;
+
+        //How long did the game take
+        const endTime = Date.now();
+        const timeTaken = (endTime - startTime) / 1000; // Convert to seconds
+        handleBestTime(timeTaken);
+        
         updateStats()
         fireConfetti()
     }
 
 
+}
+
+function formatTime(timeInSeconds) {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+  
+    // Ensure two-digit display for minutes and seconds
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+  
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+  
+
+function handleBestTime(timeTaken) {
+    stopTimer()
+    
+    //Session best time
+    if (!sessionBestTime || timeTaken < sessionBestTime) {
+        sessionBestTime = timeTaken;
+        updateSessionBestTimeDisplay(sessionBestTime);
+    }
+
+    //Lifetime best time
+    const localStorageKey = "lifetimeBestTime";
+    const storedTime = localStorage.getItem(localStorageKey);
+    const bestTime = storedTime ? Math.min(timeTaken, parseFloat(storedTime)) : timeTaken;
+    localStorage.setItem(localStorageKey, bestTime);
+    updateLifetimeBestTimeDisplay(bestTime);
+}
+
+function updateLifetimeBestTimeDisplay(timeTaken) {
+    const formattedTime = formatTime(timeTaken);
+    document.querySelector('.lifetime-best-time').textContent = `Lifetime Best: ${formattedTime}`;
+}
+
+function updateSessionBestTimeDisplay(timeTaken) {
+    const formattedTime = formatTime(timeTaken); // (Create a function for formatting)
+    document.querySelector('.session-best-time').textContent = `Session Best: ${formattedTime}`;
 }
 
 function fireConfetti() {
@@ -143,6 +212,9 @@ function generateBottles() {
 
     document.documentElement.style.setProperty('--max-layers-per-bottle', maxLayersPerBottle);
     document.documentElement.style.setProperty('--layer-height', layerHeight + 'px');
+
+    startTime = Date.now();
+    startTimer()
 
     const unassignedLayers = [];
 
