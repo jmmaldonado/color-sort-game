@@ -104,3 +104,20 @@ select {
 .difficulty-selector {
     text-align: right;
 }
+
+
+
+.timer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+  }
+  
+
+  .best-times {
+    flex: 1 1 auto; /* Expand the best-times container to fill remaining space */
+    display: flex;
+    flex-direction: column; /* Stack the counters vertically */
+    align-items: end;
+  }
