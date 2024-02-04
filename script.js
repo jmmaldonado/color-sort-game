@@ -92,11 +92,11 @@ function pourLayers(sourceBottle, targetBottle) {
 
     // Get contiguous layers of the same color from the top of the source bottle
     let contiguousLayers = [];
-    let currentColor = sourceLayers[sourceLayers.length - 1].style.bottleLayerColor;
+    let currentColor = sourceLayers[sourceLayers.length - 1].id;
     console.log("Pour currentColor:", currentColor)
     for (let i = sourceLayers.length - 1; i >= 0; i--) {
         const layer = sourceLayers[i];
-        if (layer.style.bottleLayerColor === currentColor) {
+        if (layer.id === currentColor) {
             contiguousLayers.push(layer);
         } else {
             break;
@@ -110,7 +110,7 @@ function pourLayers(sourceBottle, targetBottle) {
 
     // Check if the topmost layer in the target bottle has the same color
     if (targetLayers.length > 0 &&
-        targetLayers[targetLayers.length - 1].style.bottleLayerColor !== currentColor) {
+        targetLayers[targetLayers.length - 1].id !== currentColor) {
         return; // Colors don't match
     }
 
@@ -263,7 +263,7 @@ function generateBottles() {
             const layer = document.createElement('div');
             layer.classList.add('layer');
             layer.classList.add(color)
-            layer.style.bottleLayerColor = color;
+            layer.id = color
             layer.style.height = `${layerHeight}px`; // Set fixed height
             unassignedLayers.push(layer);
         }
@@ -357,11 +357,11 @@ function checkGameSolved() {
         }
 
         // Get the color of the first layer in this bottle
-        const referenceColor = bottle.querySelector('.layer').style.bottleLayerColor;
+        const referenceColor = bottle.querySelector('.layer').id;
 
         // Check if all other layers in the bottle have the same color
         for (const layer of bottle.querySelectorAll('.layer')) {
-            if (layer.style.bottleLayerColor !== referenceColor) {
+            if (layer.id !== referenceColor) {
                 return false; // Not solved, colors don't match
             }
         }
