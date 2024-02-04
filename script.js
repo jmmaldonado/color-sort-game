@@ -1,3 +1,5 @@
+const latestVersion = "1.2.5";
+
 let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
 let numEmpty = parseInt(document.getElementById('num-empty').value);
 let maxLayersPerBottle = parseInt(document.getElementById('num-layers').value);
@@ -24,7 +26,6 @@ let sessionGamesPlayed = 0;
 let sessionGamesWon = 0;
 let sessionBestTime = parseFloat(localStorage.getItem("lifetimeBestTime")) || null;
 
-updateStats()
 
 
 let gameSolved = false
@@ -107,7 +108,7 @@ function pourLayers(sourceBottle, targetBottle) {
         const endTime = Date.now();
         const timeTaken = (endTime - startTime) / 1000; // Convert to seconds
         handleBestTime(timeTaken);
-        
+
         updateStats()
         fireConfetti()
     }
@@ -118,18 +119,18 @@ function pourLayers(sourceBottle, targetBottle) {
 function formatTime(timeInSeconds) {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
-  
+
     // Ensure two-digit display for minutes and seconds
     const formattedMinutes = minutes.toString().padStart(2, '0');
     const formattedSeconds = seconds.toString().padStart(2, '0');
-  
+
     return `${formattedMinutes}:${formattedSeconds}`;
-  }
-  
+}
+
 
 function handleBestTime(timeTaken) {
     stopTimer()
-    
+
     //Session best time
     if (!sessionBestTime || timeTaken < sessionBestTime) {
         sessionBestTime = timeTaken;
@@ -331,9 +332,10 @@ function checkGameSolved() {
     return true;
 }
 
-
-generateBottles();
-
+updateStats();
+if (!updateAvailable()) {
+    generateBottles();
+}
 
 
 const restartButton = document.getElementById('restart-button');
@@ -348,3 +350,25 @@ restartButton.addEventListener('click', () => {
 const undoButton = document.getElementById('undo-button');
 
 undoButton.addEventListener('click', handleUndoClick);
+
+// Function to check for updates
+function updateAvailable() {
+    const storedVersion = localStorage.getItem("currentVersion");
+
+    if (storedVersion !== latestVersion) {
+        // New version is available
+        const updateButton = document.createElement("button");
+        updateButton.textContent = "Update Available - Click to Refresh";
+        updateButton.addEventListener("click", () => {
+            window.location.reload(true); // Force a hard refresh
+            localStorage.setItem("currentVersion", latestVersion);
+        });
+
+        // Add the button to the UI (adjust selector as needed)
+        document.querySelector(".bottle-container").appendChild(updateButton);
+
+        return true
+    }
+
+    return false
+}
