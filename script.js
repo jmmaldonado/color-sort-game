@@ -48,7 +48,7 @@ let gamesWon = Number(localStorage.getItem('gamesWon')) || 0;
 let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
 let sessionGamesPlayed = 0;
 let sessionGamesWon = 0;
-let sessionBestTime = parseFloat(localStorage.getItem("lifetimeBestTime")) || null;
+let sessionBestTime = null;
 let currentMovements = 0;
 
 
@@ -83,7 +83,7 @@ function updateStats() {
     gamesPlayedSpan.textContent = `${gamesPlayed}`;
     sessionGamesWonSpan.textContent = `${sessionGamesWon}`;
     sessionGamesPlayedSpan.textContent = `${sessionGamesPlayed}`;
-    updateLifetimeBestTimeDisplay(sessionBestTime)
+    updateLifetimeBestTimeDisplay(parseFloat(localStorage.getItem("lifetimeBestTime")) || null)
 }
 
 function pourLayers(sourceBottle, targetBottle) {
