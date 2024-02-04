@@ -1,4 +1,4 @@
-const latestVersion = "1.2.5";
+const latestVersion = "1.2.6 - Add current movement counter";
 
 let numBottles = parseInt(document.getElementById('num-bottles').value) - 1;
 let numEmpty = parseInt(document.getElementById('num-empty').value);
@@ -25,7 +25,7 @@ let gamesPlayed = Number(localStorage.getItem('gamesPlayed')) || 0;
 let sessionGamesPlayed = 0;
 let sessionGamesWon = 0;
 let sessionBestTime = parseFloat(localStorage.getItem("lifetimeBestTime")) || null;
-
+let currentMovements = 0;
 
 
 let gameSolved = false
@@ -92,6 +92,9 @@ function pourLayers(sourceBottle, targetBottle) {
     //Save the current state in case we need to go back
     previousState.push(document.querySelector('.bottle-container').cloneNode(true));
 
+    //Update the number of movements
+    increaseMovementCounter()
+
     // Pour the layers!
     for (const layer of contiguousLayers) {
         sourceBottle.removeChild(layer);
@@ -114,6 +117,11 @@ function pourLayers(sourceBottle, targetBottle) {
     }
 
 
+}
+
+function increaseMovementCounter() {
+    currentMovements++;
+    document.getElementById("movement-number").textContent = currentMovements;
 }
 
 function formatTime(timeInSeconds) {
@@ -294,6 +302,7 @@ function handleBottleClick(bottle) {
 
 function handleUndoClick() {
     if (previousState.length > 0) {
+        increaseMovementCounter()
         const savedState = previousState.pop()
         document.querySelector('.bottle-container').innerHTML = savedState.innerHTML
         selectedSourceBottle = null;

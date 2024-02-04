@@ -114,6 +114,12 @@ select {
     padding-top: 10px;
   }
   
+  .time-and-movements {
+    flex: 1 1 auto; /* Expand the best-times container to fill remaining space */
+    display: flex;
+    flex-direction: column; /* Stack the counters vertically */
+    align-items: start;
+  }
 
   .best-times {
     flex: 1 1 auto; /* Expand the best-times container to fill remaining space */
